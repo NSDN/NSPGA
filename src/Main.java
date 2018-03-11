@@ -1,4 +1,4 @@
-package cn.ac.nya.nspga;
+import cn.ac.nya.nspga.NSPGAT4C4;
 
 /**
  * Created by drzzm32 on 2018.3.11.
@@ -17,8 +17,11 @@ public class Main {
                 0x0000, // Counter RS-Latch MUX
         };
 	    dev.configure(data);
+	    long start = System.nanoTime();
 	    byte out = dev.output((byte) 0xFF);
+	    long end = System.nanoTime();
 	    System.out.println(String.format("Result: %02X", out));
+        System.out.println(String.format("Took %d ns", end - start));
     }
 
 }
