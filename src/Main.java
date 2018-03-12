@@ -1,3 +1,4 @@
+import cn.ac.nya.nspga.INSPGA;
 import cn.ac.nya.nspga.NSPGAT0C0;
 import cn.ac.nya.nspga.NSPGAT4C4;
 
@@ -11,6 +12,30 @@ public class Main {
 	    NSPGAT0C0Test();
         System.out.println("NSPGAT4C4 Test");
 	    NSPGAT4C4Test();
+	    System.out.println("getDev Test");
+	    getDevTest();
+    }
+
+    static INSPGA getDev(Class<? extends INSPGA> dev) {
+        try {
+            return dev.newInstance();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    static void getDevTest() {
+        INSPGA dev = getDev(NSPGAT0C0.class);
+        if (dev != null) {
+            int[] data = {
+                    0x10FF, // Inverter Enable
+                    0x0000, 0x0000, 0x00FF, 0x0000 // Main MUX
+            };
+            dev.configure(data);
+            byte out = dev.output((byte) 0xFF);
+            System.out.println(String.format("Result: %02X", out));
+        }
     }
 
     static void NSPGAT0C0Test() {
