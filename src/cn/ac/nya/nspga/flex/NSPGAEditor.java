@@ -16,7 +16,7 @@ public class NSPGAEditor extends JFrame {
 
     private static final String DEFAULT_PREFIX = "dev.";
 
-    private static final Font FONT = getFont("Monospaced.plain", 14.0F);
+    private static final String FONT = "Courier New";
 
     @FunctionalInterface
     public interface ICallback {
@@ -112,7 +112,7 @@ public class NSPGAEditor extends JFrame {
             c.gridx = 1; c.weightx = 0;
             panel.add(new JLabel("        "), c);
             JTextField field = new JTextField(DEFAULT_PREFIX + "in." + i);
-            field.setFont(FONT);
+            field.setFont(getFont(FONT, 14.0F));
             c.gridx = 2; c.weightx = 1;
             panel.add(field, c);
             inputs.add(field);
@@ -133,7 +133,7 @@ public class NSPGAEditor extends JFrame {
             c.gridx = 1; c.weightx = 0;
             panel.add(new JLabel("        "), c);
             JTextField field = new JTextField(DEFAULT_PREFIX + "out." + i);
-            field.setFont(FONT);
+            field.setFont(getFont(FONT, 14.0F));
             c.gridx = 2; c.weightx = 1;
             panel.add(field, c);
             outputs.add(field);
@@ -148,7 +148,7 @@ public class NSPGAEditor extends JFrame {
         globalCfg.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         globalCfg.add(new JLabel("Global IO Prefix"));
         portPrefix = new JTextField("foo.bar." + DEFAULT_PREFIX);
-        portPrefix.setFont(FONT);
+        portPrefix.setFont(getFont(FONT, 14.0F));
         globalCfg.add(portPrefix);
         btnApply = new JButton("Apply");
         btnApply.setActionCommand(CMD_APPLY);
@@ -179,7 +179,7 @@ public class NSPGAEditor extends JFrame {
         portPanel.add(globalCfg, BorderLayout.NORTH);
 
         codeArea = new JTextArea();
-        codeArea.setFont(FONT);
+        codeArea.setFont(getFont(FONT, 14.0F));
         codeArea.setWrapStyleWord(true);
         codeArea.setLineWrap(true);
         codeArea.setTabSize(4);
