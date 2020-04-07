@@ -1,6 +1,6 @@
-import cn.ac.nya.nspga.INSPGA;
-import cn.ac.nya.nspga.NSPGAT0C0;
-import cn.ac.nya.nspga.NSPGAT4C4;
+import cn.ac.nya.nspga.*;
+import cn.ac.nya.nspga.flex.*;
+import java.util.Scanner;
 
 /**
  * Created by drzzm32 on 2018.3.11.
@@ -8,12 +8,20 @@ import cn.ac.nya.nspga.NSPGAT4C4;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("NSPGAT0C0 Test");
-	    NSPGAT0C0Test();
-        System.out.println("NSPGAT4C4 Test");
-	    NSPGAT4C4Test();
-	    System.out.println("getDev Test");
-	    getDevTest();
+//        System.out.println("NSPGAT0C0 Test");
+//	    NSPGAT0C0Test();
+//        System.out.println("NSPGAT4C4 Test");
+//	    NSPGAT4C4Test();
+//	    System.out.println("getDev Test");
+//	    getDevTest();
+
+	    new NSPGAEditor(8, 8, new NSPGAF344NHV1("").getDefaultCode()).setCallback((inputs, outputs, code) -> {
+            INSPGAFlex dev = new NSPGAF344NHV1(code);
+            dev.initialize();
+            System.out.println("Timebase: " + dev.timebase());
+            for (int i = 0; i < dev.timebase(); i++)
+                System.out.println("Output: " + dev.output((byte) i));
+        });
     }
 
     static INSPGA getDev(Class<? extends INSPGA> dev) {
