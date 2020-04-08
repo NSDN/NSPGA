@@ -14,7 +14,7 @@ public class NSPGAF344NHV1 implements INSPGAFlex {
 
     protected static final int REG_CNT = 32;
     protected int[] regs = new int[REG_CNT];
-    protected int prevInput = 0;
+    protected long prevInput = 0;
 
     public NSPGAF344NHV1(String code) {
         this.code = code;
@@ -75,18 +75,21 @@ public class NSPGAF344NHV1 implements INSPGAFlex {
 
     @Override
     public final Number output(Number input) {
-        AtomicReference<Integer> result = new AtomicReference<>(0);
+        AtomicReference<Long> result = new AtomicReference<>(0L);
         INSPGAFlex.run(() -> {
             Invocable invocable = (Invocable) engine;
-            Object obj = invocable.invokeFunction("logic", input, prevInput ^ input.intValue());
+            Object obj = invocable.invokeFunction(
+                    "logic",
+                    BinUtil.uint32_t(input.longValue()),
+                    BinUtil.uint32_t(prevInput ^ input.longValue()));
             for (int i = 0; i < REG_CNT; i++) {
                 Object o = engine.get("r" + i);
                 if (o instanceof Number)
                     regs[i] = ((Number) o).intValue();
             }
-            prevInput = input.intValue();
+            prevInput = BinUtil.uint32_t(input.longValue());
             if (obj instanceof Number)
-                result.set(((Number) obj).intValue());
+                result.set(BinUtil.uint32_t(((Number) obj).longValue()));
         });
         return result.get();
     }

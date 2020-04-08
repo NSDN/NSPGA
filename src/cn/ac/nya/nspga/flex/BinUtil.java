@@ -5,6 +5,8 @@ package cn.ac.nya.nspga.flex;
  */
 public class BinUtil {
 
+    public static long uint32_t(long val) { return val & 0x0FFFFFFFFL; }
+
     public static byte get(byte val, int bit) {
         return (byte) ((val & (1 << bit)) != 0 ? 1 : 0);
     }
@@ -17,16 +19,16 @@ public class BinUtil {
         return (byte) (val & ~(1 << bit));
     }
 
-    public static int get(int val, int bit) {
+    public static long get(long val, int bit) {
         return (val & (1 << bit)) != 0 ? 1 : 0;
     }
 
-    public static int set(int val, int bit) {
-        return val | (1 << bit);
+    public static long set(long val, int bit) {
+        return uint32_t(val | (1 << bit));
     }
 
-    public static int rst(int val, int bit) {
-        return val & ~(1 << bit);
+    public static long rst(long val, int bit) {
+        return uint32_t(val & ~(1 << bit));
     }
 
 }
