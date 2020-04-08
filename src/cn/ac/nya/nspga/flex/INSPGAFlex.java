@@ -12,7 +12,7 @@ import java.util.concurrent.*;
  */
 public interface INSPGAFlex {
 
-    ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(8);
+    ExecutorService EXECUTOR = Executors.newFixedThreadPool(4);
 
     NashornScriptEngineFactory FACTORY = new NashornScriptEngineFactory();
     static ScriptEngine getEngine() {
@@ -36,12 +36,11 @@ public interface INSPGAFlex {
     }
 
     static void schedule(Run r) {
-        EXECUTOR.setKeepAliveTime(1000, TimeUnit.MILLISECONDS);
-        EXECUTOR.schedule(() -> {
-            try {
-                r.run();
-            } catch (Exception ignored) { }
-        }, 0, TimeUnit.MILLISECONDS);
+        EXECUTOR.execute(() -> {
+            Thread t = new Thread(() -> run(r));
+            t.start();
+            run(() -> {t.join(1000); t.stop();});
+        });
     }
 
     String getDefaultCode();

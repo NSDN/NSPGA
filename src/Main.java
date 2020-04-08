@@ -15,13 +15,23 @@ public class Main {
 //	    System.out.println("getDev Test");
 //	    getDevTest();
 
-	    new NSPGAEditor(8, 8, new NSPGAF344NHV1("").getDefaultCode()).setCallback((inputs, outputs, code) -> {
-            INSPGAFlex dev = new NSPGAF344NHV1(code);
-            dev.initialize();
-            System.out.println("Timebase: " + dev.timebase());
-            for (int i = 0; i < dev.timebase(); i++)
-                System.out.println("Output: " + dev.output((byte) i));
+//	    new NSPGAEditor(8, 8, new NSPGAF344NHV1("").getDefaultCode()).setCallback((inputs, outputs, code) -> {
+//            INSPGAFlex dev = new NSPGAF344NHV1(code);
+//            INSPGAFlex.schedule(() -> {
+//                dev.initialize();
+//                System.out.println("Timebase: " + dev.timebase());
+//                for (int i = 0; i < dev.timebase(); i++)
+//                    System.out.println("Output: " + dev.output((byte) i));
+//            });
+//        });
+        INSPGAFlex.schedule(() -> {
+            while (true);
         });
+
+        try {
+            Thread.sleep(5000);
+        } catch (Exception ignored) {}
+        INSPGAFlex.EXECUTOR.shutdown();
     }
 
     static INSPGA getDev(Class<? extends INSPGA> dev) {
