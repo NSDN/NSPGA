@@ -1,6 +1,7 @@
 import cn.ac.nya.nspga.*;
 import cn.ac.nya.nspga.flex.*;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by drzzm32 on 2018.3.11.
@@ -24,14 +25,27 @@ public class Main {
 //                    System.out.println("Output: " + dev.output((byte) i));
 //            });
 //        });
-        INSPGAFlex.schedule(() -> {
-            while (true);
-        });
 
+        AtomicBoolean b = new AtomicBoolean(false);
+
+        while (!b.get()) {
+            INSPGAFlex.schedule(() -> {
+                while (true);
+            }, () -> {
+                b.set(true);
+                System.out.println("exceed");
+            });
+            try {
+                Thread.sleep(50);
+            } catch (Exception ignored) {}
+        }
+
+        System.out.println("bye");
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (Exception ignored) {}
         INSPGAFlex.EXECUTOR.shutdown();
+        System.out.println(Runtime.getRuntime().availableProcessors());
     }
 
     static INSPGA getDev(Class<? extends INSPGA> dev) {

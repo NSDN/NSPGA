@@ -2,7 +2,7 @@ package cn.ac.nya.nspga.flex;
 
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
-import javax.script.*;
+import javax.script.ScriptEngine;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.concurrent.*;
@@ -12,11 +12,19 @@ import java.util.concurrent.*;
  */
 public interface INSPGAFlex {
 
-    ExecutorService EXECUTOR = Executors.newFixedThreadPool(4);
+    ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(
+            Runtime.getRuntime().availableProcessors() / 2
+    );
+    int EXCEED_TIME_MS = 3000;
 
     NashornScriptEngineFactory FACTORY = new NashornScriptEngineFactory();
     static ScriptEngine getEngine() {
-        ScriptEngine engine = FACTORY.getScriptEngine((c) -> c.equals(BinUtil.class.getName()));
+        ScriptEngine engine;
+        try {
+            engine = FACTORY.getScriptEngine((c) -> c.equals(BinUtil.class.getName()));
+        } catch (Exception e) {
+            return null;
+        }
         engine.getContext().setReader(new StringReader(""));
         engine.getContext().setWriter(new StringWriter());
         engine.getContext().setErrorWriter(new StringWriter());
@@ -35,11 +43,19 @@ public interface INSPGAFlex {
         } catch (Exception ignored) { }
     }
 
-    static void schedule(Run r) {
+    static void schedule(Run r, Runnable timeoutCallback) {
         EXECUTOR.execute(() -> {
             Thread t = new Thread(() -> run(r));
             t.start();
-            run(() -> {t.join(1000); t.stop();});
+            long time = System.currentTimeMillis();
+            while (t.isAlive()) {
+                if (System.currentTimeMillis() - time > EXCEED_TIME_MS) {
+                    t.stop();
+                    EXECUTOR.getQueue().clear();
+                    timeoutCallback.run();
+                    break;
+                }
+            }
         });
     }
 
